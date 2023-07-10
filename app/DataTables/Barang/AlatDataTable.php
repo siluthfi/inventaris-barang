@@ -24,16 +24,20 @@ class AlatDataTable extends DataTable
     {
         return (new EloquentDataTable($query))
             ->addColumn('action', function($data) {
-                $show   = route('admin.bahan.show', $data->id);
-                $edit   = route('admin.bahan.edit', $data->id);
-                $delete = route('admin.bahan.destroy', $data->id);
+                $show   = route('admin.alat.show', $data->id);
+                $update = route('admin.alat.update', $data->id);
+                $delete = route('admin.alat.destroy', $data->id);
                 return "
-                        <a href='$edit' class='text-warning mr-2'><i class='fas fa-edit'></i></a>
+                        <a onclick='handleEdit(this)' data-id='$data->id' data-url='$update' style='cursor: pointer;' class='text-warning mr-2'><i class='fas fa-edit'></i></a>
                         <a onclick='handleDelete(this)' data-url='$delete' style='cursor: pointer;' class='text-danger'><i class='fas fa-trash'></i></a>";
             })
             ->editColumn('tanggal_masuk', function($data) {
                 return date('d-m-Y', strtotime($data->tanggal_masuk));
             })
+            ->editColumn('foto', function($data) {
+                return "<img src='" . asset($data->foto) . "' class='img-fluid'>";
+            })
+            ->rawColumns(['foto', 'action'])
             ->setRowId('id');
     }
 
@@ -45,6 +49,11 @@ class AlatDataTable extends DataTable
      */
     public function query(Alat $model): QueryBuilder
     {
+        if(!str_contains(url()->current(), 'admin')) {
+            $asd = explode("/", url()->current());
+            $asds = count($asd); 
+            return $model->newQuery()->where('id_ruangan', $asd[$asds - 2]);
+        }
         return $model->newQuery();
     }
 
@@ -70,11 +79,21 @@ class AlatDataTable extends DataTable
      */
     public function getColumns(): array
     {
+        if(str_contains(url()->current(), 'alat') && !str_contains(url()->current(), 'admin')) {
+            return [
+                Column::make('nama'),
+                Column::make('foto')->width(200),
+                Column::make('kode_alat'),
+                Column::make('stok_jumlah')->width(150),
+                Column::make('tanggal_masuk')->width(200),
+            ];
+        }
         return [
             Column::make('nama'),
-            Column::make('foto'),
-            Column::make('stok_jumlah'),
-            Column::make('tanggal_masuk'),
+            Column::make('foto')->width(200),
+            Column::make('kode_alat'),
+            Column::make('stok_jumlah')->width(150),
+            Column::make('tanggal_masuk')->width(200),
             Column::computed('action')
                   ->exportable(false)
                   ->printable(false)

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\DataTables\Barang\AlatDataTable;
 use App\Models\Alat;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
+use Image;
 
 class AlatController extends Controller
 {
@@ -42,7 +44,17 @@ class AlatController extends Controller
 
         $alat->nama = $request->nama;
         $alat->kode_alat = $request->kode_alat;
-        $alat->foto = $request->foto;
+
+        $namesignature = null;
+        if ($request->hasFile('foto')) {
+            $file = $request->file('foto');
+            $photo = Image::make($file->getPathName());
+            $path = 'img/alat/' . time() . "_" . $file->getClientOriginalName();
+            $photoUrl = $photo->save(public_path($path), 50);
+            $namesignature = $path;
+        }
+
+        $alat->foto = $namesignature;
         $alat->stok_jumlah = $request->stok_jumlah;
         $alat->tanggal_masuk = $request->tanggal_masuk;
         $alat->save();
@@ -81,7 +93,28 @@ class AlatController extends Controller
      */
     public function update(Request $request, Alat $alat)
     {
-        //
+        $alat->nama = $request->nama;
+        $alat->kode_alat = $request->kode_alat;
+
+        $namesignature = $alat->foto;
+        if ($request->hasFile('foto')) {
+            if (File::exists(public_path($alat->foto))) {
+                File::delete(public_path($alat->foto));
+            }
+            $file = $request->file('foto');
+            $photo = Image::make($file->getPathName());
+            $path = 'img/alat/' . time() . "_" . $file->getClientOriginalName();
+            $photoUrl = $photo->save(public_path($path), 50);
+            $namesignature = $path;
+        }
+
+        $alat->foto = $namesignature;
+
+        $alat->stok_jumlah = $request->stok_jumlah;
+        $alat->tanggal_masuk = $request->tanggal_masuk;
+        $alat->save();
+
+        return redirect()->back()->with('success', 'Alat berhasil di update!');
     }
 
     /**
@@ -92,6 +125,21 @@ class AlatController extends Controller
      */
     public function destroy(Alat $alat)
     {
-        //
+        $alat->delete();
+        return redirect()->back()->with('success', 'Alat berhasil dihapus!');
+    }
+
+    public function getAlat($id)
+    {
+        $data = Alat::where('id', $id)->first();
+
+        return response()->json($data);
+    }
+
+    public function getAlatRuangan($id)
+    {
+        $data = Alat::where('id_ruangan', $id)->get();
+
+        return response()->json($data);
     }
 }

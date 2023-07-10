@@ -1,8 +1,8 @@
 <?php
 
-namespace App\DataTables\Barang;
+namespace App\DataTables;
 
-use App\Models\Bahan;
+use App\Models\Ruangan;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
@@ -12,7 +12,7 @@ use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
 
-class BahanDataTable extends DataTable
+class RuanganDataTable extends DataTable
 {
     /**
      * Build DataTable class.
@@ -24,37 +24,36 @@ class BahanDataTable extends DataTable
     {
         return (new EloquentDataTable($query))
             ->addColumn('action', function($data) {
-                $show   = route('admin.bahan.show', $data->id);
-                $update   = route('admin.bahan.update', $data->id);
-                $delete = route('admin.bahan.destroy', $data->id);
+                if(route('dashboard') == url()->current()) {
+                    $show   = route('dashboard.ruangan', $data->id);
+                    return "<a href='$show' class='text-primary mr-2'><i class='fas fa-eye'></i></a>";
+                }
+                $show   = route('admin.ruangan.show', $data->id);
+                $update = route('admin.ruangan.update', $data->id);
+                $delete = route('admin.ruangan.destroy', $data->id);
                 return "
-                        <a onclick='handleEdit(this)' data-id='$data->id' data-url='$update' style='cursor: pointer;' class='text-warning mr-2'><i class='fas fa-edit'></i></a>
+                        <a onclick='handleEditRuangan(this)' data-id='$data->id' data-url='$update' style='cursor: pointer;' class='text-warning mr-2'><i class='fas fa-edit'></i></a>
                         <a onclick='handleDelete(this)' data-url='$delete' style='cursor: pointer;' class='text-danger'><i class='fas fa-trash'></i></a>";
-            })
-            ->editColumn('tanggal_masuk', function($data) {
-                return date('d-m-Y', strtotime($data->tanggal_masuk));
             })
             ->editColumn('foto', function($data) {
                 return "<img src='" . asset($data->foto) . "' class='img-fluid'>";
             })
-            ->rawColumns(['foto', 'action'])
+            ->editColumn('user.nama', function($data) {
+                return $data->user ? $data->user->nama : '';
+            })
+            ->rawColumns(['action', 'foto'])
             ->setRowId('id');
     }
 
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\Bahan $model
+     * @param \App\Models\Ruangan $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(Bahan $model): QueryBuilder
+    public function query(Ruangan $model): QueryBuilder
     {
-        if(!str_contains(url()->current(), 'admin')) {
-            $asd = explode("/", url()->current());
-            $asds = count($asd); 
-            return $model->newQuery()->where('id_ruangan', $asd[$asds - 2]);
-        }
-        return $model->newQuery();
+        return $model->newQuery()->with('user');
     }
 
     /**
@@ -69,7 +68,8 @@ class BahanDataTable extends DataTable
                     ->columns($this->getColumns())
                     ->minifiedAjax()
                     ->dom('lfrtip')
-                    ->orderBy(1);
+                    ->orderBy(1)
+                    ->selectStyleSingle();
     }
 
     /**
@@ -79,21 +79,11 @@ class BahanDataTable extends DataTable
      */
     public function getColumns(): array
     {
-        if(str_contains(url()->current(), 'bahan') && !str_contains(url()->current(), 'admin')) {
-            return [
-                Column::make('nama'),
-                Column::make('foto')->width(200),
-                Column::make('kode_bahan'),
-                Column::make('stok_jumlah')->width(200),
-                Column::make('tanggal_masuk')->width(200)
-            ];
-        }
         return [
-            Column::make('nama'),
+            Column::make('nama_ruangan'),
+            Column::make('gedung'),
             Column::make('foto')->width(200),
-            Column::make('kode_bahan'),
-            Column::make('stok_jumlah')->width(150),
-            Column::make('tanggal_masuk')->width(200),
+            Column::make('user.nama')->width(300)->title('Kepala Lab'),
             Column::computed('action')
                   ->exportable(false)
                   ->printable(false)
@@ -107,8 +97,8 @@ class BahanDataTable extends DataTable
      *
      * @return string
      */
-    // protected function filename(): string
-    // {
-    //     return 'Bahan_' . date('YmdHis');
-    // }
+    protected function filename(): string
+    {
+        return 'Ruangan_' . date('YmdHis');
+    }
 }

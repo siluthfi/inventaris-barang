@@ -17,6 +17,8 @@ return new class extends Migration
             $table->id();
             $table->string("nama_ruangan")->nullable();
             $table->string("foto")->nullable();
+            $table->string("gedung")->nullable();
+            $table->foreignId("user_id")->nullable();
             $table->timestamps();
         });
     }

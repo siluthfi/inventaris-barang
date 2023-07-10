@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Ruangan;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Alat extends Model
 {
@@ -17,6 +18,11 @@ class Alat extends Model
         "foto",
         "stok_jumlah",
         "tanggal_masuk",
-        "id_kategori",  
+        "id_ruangan",  
     ];
+
+    public function ruangan()
+    {
+        return $this->belongsTo(Ruangan::class);
+    }
 }

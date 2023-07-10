@@ -48,7 +48,15 @@
                                         <label for="">Kode Alat</label>
                                         <input type="text" class="form-control shadow-sm mb-3" name="kode_alat">
                                         <label for="">Foto</label>
-                                        <input type="text" class="form-control shadow-sm mb-3" name="foto">
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
+                                            </div>
+                                            <div class="custom-file">
+                                                <input type="file" class="custom-file-input" id="inputGroupFile01" onchange="changeLabel(this)" name="foto" aria-describedby="inputGroupFileAddon01" accept="image/*">
+                                                <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                                            </div>
+                                        </div>
                                         <label for="">Stok Jumlah</label>
                                         <input type="number" class="form-control shadow-sm mb-3" name="stok_jumlah">
                                         <label for="">Tanggal Masuk</label>
@@ -67,6 +75,8 @@
   
         </div>
     </div>
+
+    @include('modal.index')
     <x-adminlte-card theme="lime" theme-mode="outline">
         <div class="row">
             <div class="col-md">
@@ -84,6 +94,37 @@
 @section('js')
     <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
+    <script src="{{ asset('js/script.js') }}"></script>
     {{ $dataTable->scripts() }}
+    <script>
+        function handleDelete(value) {
+            $('#deleteModal').modal('toggle')
+            const formhapus = document.querySelector('#formHapusModal');
+            formhapus.setAttribute('action', value.dataset.url);
+        }
+
+        function handleEdit(value) {
+            $.ajax({
+                url: `{{ route('admin.ajax.getAlat') }}/${value.dataset.id}`,
+                dataType: "JSON",
+                type: "GET",
+                success: function(data) {
+                    $('#editModalAlat').modal('toggle')
+                    const editFormAlat = document.querySelector("#editFormAlat");
+                    editFormAlat.setAttribute('action', value.dataset.url)
+
+                    const namaAlat = document.querySelector("#namaAlat");
+                    const KodeAlat = document.querySelector("#KodeAlat");
+                    const stokJumlahAlat = document.querySelector("#stokJumlahAlat");
+                    const tanggalMasukAlat = document.querySelector("#tanggalMasukAlat");
+
+                    namaAlat.value = data.nama
+                    KodeAlat.value = data.kode_alat
+                    stokJumlahAlat.value = data.stok_jumlah
+                    tanggalMasukAlat.value = data.tanggal_masuk.split(' ')[0]
+                }
+            })
+        }
+    </script>
     {{-- <script> console.log('Hi!'); </script> --}}
 @stop

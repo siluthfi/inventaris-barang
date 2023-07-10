@@ -13,6 +13,20 @@ return new class extends Migration
      */
     public function up()
     {
+        Schema::create('peminjaman', function (Blueprint $table) {
+            $table->id();
+            $table->string('kode_barang')->nullable();
+            $table->string('nama_ruangan')->nullable();
+            $table->string('nama_barang')->nullable();
+            $table->timestamp('tanggal_dipakai')->nullable();
+            $table->timestamp('waktu_peminjaman')->nullable();
+            $table->date('waktu_peminjaman_ambil')->nullable();
+            $table->date('waktu_peminjaman_kembali')->nullable();
+            $table->foreignId('id_ruangan')->nullable();
+            $table->integer('jumlah')->nullable();
+            $table->timestamps();
+        });
+
         Schema::create('pemakaians', function (Blueprint $table) {
             $table->id();
             $table->string('kode_barang')->nullable();
@@ -20,6 +34,8 @@ return new class extends Migration
             $table->string('nama_barang')->nullable();
             $table->timestamp('tanggal_dipakai')->nullable();
             $table->timestamp('waktu_pemakaian')->nullable();
+            $table->date('waktu_pemakaian_ambil')->nullable();
+            $table->date('waktu_pemakaian_kembali')->nullable();
             $table->foreignId('id_ruangan')->nullable();
             $table->integer('jumlah')->nullable();
             $table->timestamps();
@@ -34,5 +50,6 @@ return new class extends Migration
     public function down()
     {
         Schema::dropIfExists('pemakaians');
+        Schema::dropIfExists('peminjaman');
     }
 };

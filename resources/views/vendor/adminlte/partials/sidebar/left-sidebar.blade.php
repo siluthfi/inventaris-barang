@@ -20,8 +20,25 @@
                 @endif>
                 {{-- Configured sidebar links --}}
                 @each('adminlte::partials.sidebar.menu-item', $adminlte->menu('sidebar'), 'item')
+
+                <li class="nav-item">
+                    <form action="{{ route('logout') }}" method="POST" id="formulirLogout">
+                        @csrf
+                        <a class="nav-link" onclick="formLogout(this)" style="cursor: pointer">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <p>Logout</p>
+                        </a>
+                    </form>
+                </li>
             </ul>
         </nav>
     </div>
+
+    <script>
+        function formLogout(value) {
+            value.preventDefault;
+            document.querySelector('#formulirLogout').submit()
+        }
+    </script>
 
 </aside>

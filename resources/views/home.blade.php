@@ -9,36 +9,21 @@
 @section('content')
     <div class="row">
         <div class="col-md">
-            <x-adminlte-info-box title="Bahan" text="48" icon="fas fa-lg fa-box text-dark" theme="gradient-teal"/>
+            <x-adminlte-info-box title="Bahan" text="{{ $bahan }}" icon="fas fa-lg fa-box text-dark" theme="gradient-teal"/>
         </div>
         <div class="col-md">
-            <x-adminlte-info-box title="Alat" text="20" icon="fas fa-lg fa-box text-dark" theme="gradient-orange"/>
+            <x-adminlte-info-box title="Alat" text="{{ $alat }}" icon="fas fa-lg fa-wrench text-dark" theme="gradient-orange"/>
         </div>
         <div class="col-md">
-            <div class="card card-orange">
-                <div class="card-body">
-                    <img src="https://i.pinimg.com/564x/cb/16/bb/cb16bb284a2a80c75041c80ba63e62d3.jpg" class="img-fluid">
-                    <h3 class="text-center mt-3">Wishlist</h3>
-                </div>
-            </div>
+            <x-adminlte-info-box title="Ruangan" text="{{ $ruangan }}" icon="fas fa-lg fa-building text-dark" theme="gradient-red"/>
         </div>
     </div>
     <div class="row">
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-body">
-                    <img src="https://i.pinimg.com/564x/cb/16/bb/cb16bb284a2a80c75041c80ba63e62d3.jpg" class="img-fluid">
-                    <h3 class="text-center mt-3">Penggunaan Alat</h3>
-                </div>
-            </div>
+        <div class="col-md">
+            <x-adminlte-info-box title="Pemakaian" text="{{ $pemakaian }}" icon="fas fa-lg fa-hand-holding text-dark" theme="gradient-green"/>
         </div>
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-body">
-                    <img src="https://i.pinimg.com/564x/cb/16/bb/cb16bb284a2a80c75041c80ba63e62d3.jpg" class="img-fluid">
-                    <h3 class="text-center mt-3">Pemakaian Bahan</h3>
-                </div>
-            </div>
+        <div class="col-md">
+            <x-adminlte-info-box title="Peminjaman" text="{{ $peminjaman }}" icon="fas fa-lg fa-handshake text-dark" theme="gradient-yellow"/>
         </div>
     </div>
 @stop

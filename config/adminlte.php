@@ -107,7 +107,7 @@ return [
     */
 
     'preloader' => [
-        'enabled' => true,
+        'enabled' => false,
         'img' => [
             'path' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
             'alt' => 'AdminLTE Preloader Image',
@@ -130,7 +130,7 @@ return [
     */
 
     'usermenu_enabled' => true,
-    'usermenu_header' => false,
+    'usermenu_header' => true,
     'usermenu_header_class' => 'bg-primary',
     'usermenu_image' => false,
     'usermenu_desc' => false,
@@ -316,8 +316,8 @@ return [
         [
             'text'        => 'Dashboard',
             'url'         => 'admin/home',
-            'icon'        => 'fas fa-tachometer-alt-slow',
-            'label'       => 4,
+            'icon'        => 'fas fa-home',
+            // 'label'       => 4,
             'label_color' => 'success',
         ],
 
@@ -329,12 +329,22 @@ return [
                 [
                     'text' => 'Bahan',
                     'url'  => 'admin/bahan',
+                    'icon'    => 'fas fa-fw fa-box',
                 ],
                 [
                     'text' => 'Alat',
                     'url'  => 'admin/alat',
+                    'icon'    => 'fas fa-fw fa-wrench',
                 ],
             ],
+        ],
+
+        // ruangan
+        [
+            'text'        => 'Ruangan',
+            'url'         => 'admin/ruangan',
+            'icon'        => 'fas fa-building',
+            'label_color' => 'success',
         ],
 
         // wishlist
@@ -342,7 +352,6 @@ return [
             'text'        => 'Wishlist',
             'url'         => 'admin/wishlist',
             'icon'        => 'fas fa-file',
-            'label'       => 4,
             'label_color' => 'success',
         ],
 
@@ -354,10 +363,12 @@ return [
                 [
                     'text' => 'Peminjaman',
                     'url'  => 'admin/peminjaman',
+                    'icon'    => 'fas fa-hand-holding',
                 ],
                 [
                     'text' => 'Pemakaian',
                     'url'  => 'admin/pemakaian',
+                    'icon'    => 'fas fa-handshake',
                 ],
                 // [
                 //     'text'    => 'level_one',
@@ -391,7 +402,6 @@ return [
             'text'        => 'Laporan',
             'url'         => 'admin/laporan',
             'icon'        => 'fas fa-file',
-            'label'       => 4,
             'label_color' => 'success',
         ],
 

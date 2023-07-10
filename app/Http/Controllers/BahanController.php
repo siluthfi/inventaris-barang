@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\DataTables\Barang\BahanDataTable;
 use App\Models\Bahan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
+use Image;
 
 class BahanController extends Controller
 {
@@ -42,7 +44,18 @@ class BahanController extends Controller
 
         $bahan->nama = $request->nama;
         $bahan->kode_bahan = $request->kode_bahan;
-        $bahan->foto = $request->foto;
+
+        $namesignature = null;
+        if ($request->hasFile('foto')) {
+            $file = $request->file('foto');
+            $photo = Image::make($file->getPathName());
+            $path = 'img/bahan/' . time() . "_" . $file->getClientOriginalName();
+            $photoUrl = $photo->save(public_path($path), 50);
+            $namesignature = $path;
+        }
+
+        $bahan->foto = $namesignature;
+
         $bahan->stok_jumlah = $request->stok_jumlah;
         $bahan->tanggal_masuk = $request->tanggal_masuk;
         $bahan->save();
@@ -81,7 +94,28 @@ class BahanController extends Controller
      */
     public function update(Request $request, Bahan $bahan)
     {
-        //
+        $bahan->nama = $request->nama;
+        $bahan->kode_bahan = $request->kode_bahan;
+
+        $namesignature = $bahan->foto;
+        if ($request->hasFile('foto')) {
+            if (File::exists(public_path($bahan->foto))) {
+                File::delete(public_path($bahan->foto));
+            }
+            $file = $request->file('foto');
+            $photo = Image::make($file->getPathName());
+            $path = 'img/bahan/' . time() . "_" . $file->getClientOriginalName();
+            $photoUrl = $photo->save(public_path($path), 50);
+            $namesignature = $path;
+        }
+
+        $bahan->foto = $namesignature;
+
+        $bahan->stok_jumlah = $request->stok_jumlah;
+        $bahan->tanggal_masuk = $request->tanggal_masuk;
+        $bahan->save();
+
+        return redirect()->back()->with('success', 'Bahan berhasil di update!');
     }
 
     /**
@@ -92,6 +126,21 @@ class BahanController extends Controller
      */
     public function destroy(Bahan $bahan)
     {
-        //
+        $bahan->delete();
+        return redirect()->back()->with('success', 'Bahan berhasil dihapus!');
+    }
+
+    public function getBahan($id)
+    {
+        $data = Bahan::where('id', $id)->first();
+
+        return response()->json($data);
+    }
+
+    public function getBahanRuangan($id)
+    {
+        $data = Bahan::where('id_ruangan', $id)->get();
+
+        return response()->json($data);
     }
 }

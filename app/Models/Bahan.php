@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Ruangan;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Bahan extends Model
 {
@@ -19,4 +20,9 @@ class Bahan extends Model
         "tanggal_masuk",
         "id_kategori",
     ];
+
+    public function ruangan()
+    {
+        return $this->belongsTo(Ruangan::class);
+    }
 }

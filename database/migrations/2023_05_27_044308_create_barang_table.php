@@ -20,7 +20,18 @@ return new class extends Migration
             $table->string("foto")->nullable();
             $table->string("stok_jumlah")->nullable();
             $table->timestamp("tanggal_masuk")->nullable();
-            $table->foreignId("id_kategori")->nullable();
+            $table->foreignId("id_ruangan")->nullable();
+            $table->timestamps();
+        });
+
+        Schema::create('bahans', function (Blueprint $table) {
+            $table->id();
+            $table->string("nama")->nullable();
+            $table->string("kode_bahan")->nullable();
+            $table->string("foto")->nullable();
+            $table->string("stok_jumlah")->nullable();
+            $table->timestamp("tanggal_masuk")->nullable();
+            $table->foreignId("id_ruangan")->nullable();
             $table->timestamps();
         });
     }
@@ -33,5 +44,6 @@ return new class extends Migration
     public function down()
     {
         Schema::dropIfExists('alats');
+        Schema::dropIfExists('bahans');
     }
 };
